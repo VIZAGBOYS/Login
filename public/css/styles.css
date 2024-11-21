@@ -1,326 +1,85 @@
-/* General Reset */
-body, h1, p, a, button {
+/* Global styles */
+body {
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-/* Smooth Transition for Theme Changes */
-html {
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Light Mode Styles (Default) */
-body {
-    background: linear-gradient(135deg, rgba(0, 0, 139, 0.7), rgba(70, 130, 180, 0.7)); /* Gradient dark blue */
-    background-size: 200% 200%;
-    animation: gradientAnimation 5s ease infinite;
-    font-family: Arial, sans-serif;
-    color: white;
-    padding-top: 80px; /* Space for navbar */
-}
-
-/* Navbar Styles */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: #007bff;
-    color: white;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 10;
-    flex-wrap: wrap;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Navbar Brand */
-.navbar .navbar-brand {
-    font-size: 1.8rem;
-    font-weight: bold;
-    letter-spacing: 2px;
+    background-color: #f4f4f4;
+  }
+  
+  /* Heading styles */
+  h1, h2 {
     text-align: center;
-    flex-grow: 1;
-    margin-right: 1rem;
-}
-
-/* Button Group */
-.navbar .buttons {
-    display: flex;
-    gap: 1.2rem;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-}
-
-/* Navbar Button Styles */
-.navbar .btn-primary,
-.navbar .btn-success {
-    background-color: #ff4500; /* Vibrant orange for buttons */
-    color: white;
-    padding: 0.8rem 1.5rem;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    text-align: center;
-    min-width: 140px;
-    transition: background-color 0.3s ease-in-out;
-    text-decoration: none;
-}
-
-/* Button Hover Effects */
-.navbar .btn-primary:hover,
-.navbar .btn-success:hover {
-    background-color: #e63900;
-}
-
-/* Button for Signup */
-.navbar .btn-success {
-    background-color: #00ff7f; /* Green for sign-up */
-    color: black;
-}
-
-.navbar .btn-success:hover {
-    background-color: #00cc66;
-}
-
-/* Content Area */
-.container {
-    max-width: 600px;
-    margin: 12rem auto 0;
-    text-align: center;
-    padding: 3rem;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
-}
-
-/* Form Title */
-.form-title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #ffcc00; /* Bright yellow for titles */
-    margin-bottom: 1.5rem;
-}
-
-/* Form Label */
-.form-label {
-    font-size: 1rem;
-    color: #f8f8f8;
-    margin-bottom: 0.5rem;
-    text-align: left;
-}
-
-/* Form Input Fields */
-.form-control {
+  }
+  
+  /* Form container */
+  form {
+    margin: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Input, select, and button styles */
+  input, select, button {
     width: 100%;
-    padding: 1rem 1.2rem;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    background-color: rgba(255, 255, 255, 0.6);
-    margin-bottom: 1rem;
-    font-size: 1rem;
-    color: #333;
-}
-
-.form-control:focus {
-    border-color: #ffcc00;
-    outline: none;
-    background-color: rgba(255, 255, 255, 0.8);
-}
-
-/* Error Message Styling */
-.text-danger {
-    color: red;
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
-}
-
-.d-none {
-    display: none;
-}
-
-/* Spacing and Alignment */
-.mt-5 {
-    margin-top: 3rem;
-}
-
-.w-100 {
-    width: 100%;
-}
-
-/* Register Button Styling */
-button[type="submit"] {
-    padding: 1.2rem 1.5rem;
-    font-size: 1.3rem;
-    width: 100%;
-    border-radius: 8px;
-    background-color: #ff4500;
-    color: white;
-    text-align: center;
-    transition: background-color 0.3s ease-in-out;
-    border: none;
-    text-decoration: none;
-}
-
-button[type="submit"]:hover {
-    background-color: #e63900;
-}
-
-/* Animation for the gradient */
-@keyframes gradientAnimation {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-/* Small Screen Adjustments */
-@media (max-width: 768px) {
-    .container {
-        padding: 2rem;
-        margin-top: 5rem;
-    }
-
-    .form-title {
-        font-size: 2rem;
-    }
-
-    .form-label {
-        font-size: 0.9rem;
-    }
-
-    .form-control {
-        padding: 0.8rem;
-        font-size: 1rem;
-    }
-
-    .btn {
-        padding: 0.7rem 1.2rem;
-        font-size: 1rem;
-    }
-
-    .navbar .buttons {
-        justify-content: center;
-        width: 100%;
-    }
-
-    .navbar .btn-primary,
-    .navbar .btn-success {
-        font-size: 0.9rem;
-        padding: 0.7rem 1.3rem;
-    }
-
-    button[type="submit"] {
-        padding: 1rem 2rem;
-        font-size: 1.2rem;
-        width: 100%;
-    }
-}
-
-/* Dark Mode Styles */
-body.dark-mode {
-    background: #121212; /* Dark background */
-    color: #ffffff; /* Light text for dark mode */
-}
-
-/* Navbar Dark Mode */
-.navbar.dark-mode {
-    background-color: #333333; /* Dark navbar */
-    color: white;
-}
-
-.navbar.dark-mode .btn-primary,
-.navbar.dark-mode .btn-success {
-    background-color: #ff4500; /* Retain button colors */
-    color: white;
-}
-
-.navbar.dark-mode .btn-primary:hover,
-.navbar.dark-mode .btn-success:hover {
-    background-color: #e63900; /* Hover effects */
-}
-
-/* Content Area Dark Mode */
-.container.dark-mode {
-    background-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
-}
-
-/* Button Hover Effects in Dark Mode */
-button[type="submit"].dark-mode:hover {
-    background-color: #ff6600; /* Adjusted hover color */
-}
-
-/* Adjustments for Small Screens in Dark Mode */
-@media (max-width: 768px) {
-    body.dark-mode {
-        background: #121212;
-    }
-    
-    .navbar.dark-mode {
-        background-color: #333333;
-    }
-    
-    .container.dark-mode {
-        background-color: rgba(255, 255, 255, 0.1);
-    }
-}
-
-/* Theme Toggle Button Position (Left side) */
-.theme-toggle-container {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 100; /* Ensures it's above other content */
     padding: 10px;
-}
-
-.theme-toggle {
-    background: none;
-    border: none;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+  
+  /* Button styling */
+  button {
+    background-color: #4CAF50;
+    color: white;
     cursor: pointer;
-}
-
-/* Icon style adjustments */
-.theme-toggle svg {
-    width: 30px;
-    height: 30px;
-    fill: white; /* Set default icon color */
-    transition: fill 0.3s ease;
-}
-
-/* Hover effect for icon */
-.theme-toggle svg:hover {
-    fill: #ffcc00; /* Icon color change on hover */
-}
-
-/* Theme Toggle Button in Dark Mode */
-body.dark-mode .theme-toggle svg {
-    fill: #ffcc00; /* Change the icon color in dark mode */
-}
-
-/* Additional: Ensure Sun and Moon icons work */
-#theme-icon-light { 
-    display: block;
-}
-
-#theme-icon-dark {
-    display: none;
-}
-
-body.dark-mode #theme-icon-light {
-    display: none;
-}
-
-body.dark-mode #theme-icon-dark {
-    display: block;
-}
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Modal styles */
+  .modal-dialog {
+    max-width: 400px;
+    margin: 30px auto;
+  }
+  
+  .modal-content {
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .modal-header {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .modal-title {
+    font-size: 18px;
+  }
+  
+  .modal-body {
+    font-size: 16px;
+    padding: 10px 0;
+    color: #333;
+  }
+  
+  .modal-footer {
+    text-align: center;
+  }
+  
+  .modal-footer .btn-secondary {
+    background-color: #ccc;
+    border: 1px solid #bbb;
+    padding: 8px 16px;
+  }
+  
+  .modal-footer .btn-secondary:hover {
+    background-color: #bbb;
+  }
+  
