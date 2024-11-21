@@ -1,74 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <link rel="stylesheet" href="/css/styles.css">
-
-    <!-- FontAwesome CDN for icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Page</title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-
-    <!-- Navbar -->
-    <nav class="navbar">
-        <a href="/" class="navbar-brand">My App</a>
-        <div class="buttons">
-            <a href="/login" class="btn btn-primary">Login</a>
-            <a href="/signup" class="btn btn-success">Sign Up</a>
-        </div>
-    </nav>
-
-    <!-- Dark/Light Mode Toggle Button -->
-    <div class="theme-toggle-container">
-        <button id="theme-toggle" class="theme-toggle">
-            <!-- Sun icon for light mode -->
-            <i id="theme-icon-light" class="fas fa-sun" style="display: block; font-size: 30px; color: white;"></i>
-            
-            <!-- Moon icon for dark mode -->
-            <i id="theme-icon-dark" class="fas fa-moon" style="display: none; font-size: 30px; color: white;"></i>
-        </button>
-    </div>
-
-    <!-- Home Page Content -->
-    <div class="container">
-        <h1>Welcome to My App</h1>
-        <!--<p class="lead">A place where you can find job postings and apply with ease!</p>-->
-    </div>
-
-    <!-- JavaScript for Theme Toggle -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const toggleButton = document.getElementById('theme-toggle');
-            const body = document.body;
-            const themeIconLight = document.getElementById('theme-icon-light');
-            const themeIconDark = document.getElementById('theme-icon-dark');
-
-            // Check if dark mode is set in localStorage
-            if (localStorage.getItem('theme') === 'dark') {
-                body.classList.add('dark-mode');
-                themeIconLight.style.display = 'none';  // Hide sun icon
-                themeIconDark.style.display = 'block';  // Show moon icon
-            }
-
-            // Event listener for toggling theme
-            toggleButton.addEventListener('click', function() {
-                body.classList.toggle('dark-mode');
-                
-                // Toggle icons and save preference in localStorage
-                if (body.classList.contains('dark-mode')) {
-                    themeIconLight.style.display = 'none';  // Hide sun icon
-                    themeIconDark.style.display = 'block';  // Show moon icon
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    themeIconLight.style.display = 'block'; // Show sun icon
-                    themeIconDark.style.display = 'none';  // Hide moon icon
-                    localStorage.setItem('theme', 'light');
-                }
-            });
-        });
-    </script>
-
+  <h2>Welcome to Home Page</h2>
+  <a href="/logout">Logout</a>
 </body>
 </html>

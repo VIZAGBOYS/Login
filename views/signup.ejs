@@ -3,105 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register</title>
-  <link rel="stylesheet" href="/css/styles.css">
-
-  <!-- FontAwesome CDN for icons -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="navbar-brand">My App</div>
-    <div class="buttons">
-      <a href="/" class="btn btn-primary">Home</a>
-      <a href="/login" class="btn btn-success">Login</a>
-    </div>
-  </nav>
-
-  <!-- Theme Toggle Button -->
-  <div class="theme-toggle-container">
-    <button id="theme-toggle" class="theme-toggle">
-      <!-- Sun icon for light mode -->
-      <i id="theme-icon-light" class="fas fa-sun" style="display: block; font-size: 30px; color: white;"></i>
-      
-      <!-- Moon icon for dark mode -->
-      <i id="theme-icon-dark" class="fas fa-moon" style="display: none; font-size: 30px; color: white;"></i>
-    </button>
-  </div>
-
-  <!-- Registration Form -->
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card">
-          <h3 class="text-center form-title">Register</h3>
-          <form id="registerForm" action="/signup" method="POST">
-            <div class="mb-3">
-              <label for="username" class="form-label">Username</label>
-              <input type="text" class="form-control" id="username" name="username" required>
-            </div>
-            <div class="mb-3">
-              <label for="emailReg" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="emailReg" name="email" required>
-            </div>
-            <div class="mb-3">
-              <label for="passwordReg" class="form-label">Password</label>
-              <input type="password" class="form-control" id="passwordReg" name="password" required>
-            </div>
-            <div class="mb-3">
-              <label for="phone" class="form-label">Phone Number</label>
-              <input type="tel" class="form-control" id="phone" name="phone" required>
-            </div>
-            <!-- Gender Field -->
-            <div class="mb-3">
-              <label for="gender" class="form-label">Gender</label>
-              <select class="form-control" id="gender" name="gender" required>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-success w-100">Register</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="/js/scripts.js"></script>
-
-  <!-- JavaScript for Theme Toggle -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const toggleButton = document.getElementById('theme-toggle');
-      const body = document.body;
-      const themeIconLight = document.getElementById('theme-icon-light');
-      const themeIconDark = document.getElementById('theme-icon-dark');
-
-      // Check if dark mode is set in localStorage
-      if (localStorage.getItem('theme') === 'dark') {
-        body.classList.add('dark-mode');
-        themeIconLight.style.display = 'none';  // Hide sun icon
-        themeIconDark.style.display = 'block';  // Show moon icon
-      }
-
-      // Event listener for toggling theme
-      toggleButton.addEventListener('click', function() {
-        body.classList.toggle('dark-mode');
-        
-        // Toggle icons and save preference in localStorage
-        if (body.classList.contains('dark-mode')) {
-          themeIconLight.style.display = 'none';  // Hide sun icon
-          themeIconDark.style.display = 'block';  // Show moon icon
-          localStorage.setItem('theme', 'dark');
-        } else {
-          themeIconLight.style.display = 'block'; // Show sun icon
-          themeIconDark.style.display = 'none';  // Hide moon icon
-          localStorage.setItem('theme', 'light');
-        }
-      });
-    });
-  </script>
+  <h2>Sign Up</h2>
+  <form action="/signup" method="POST">
+    <label>Name:</label>
+    <input type="text" name="name" required><br><br>
+    
+    <label>Email:</label>
+    <input type="email" name="email" required><br><br>
+    
+    <label>Phone:</label>
+    <input type="text" name="phone" required><br><br>
+    
+    <label>Password:</label>
+    <input type="password" name="password" required><br><br>
+    
+    <label>Age:</label>
+    <input type="number" name="age" required><br><br>
+    
+    <label>Gender:</label>
+    <select name="gender" required>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Other">Other</option>
+    </select><br><br>
+    
+    <button type="submit">Sign Up</button>
+  </form>
 </body>
 </html>
