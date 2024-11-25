@@ -30,8 +30,27 @@
       <option value="Female">Female</option>
       <option value="Other">Other</option>
     </select><br><br>
+
+  </form>
+
+
     
     <button type="submit">Sign Up</button>
-  </form>
+   
+    <form action="/send-otp" method="POST">
+      <input type="email" name="email" placeholder="Enter email" required />
+      <button type="submit">Send OTP</button>
+    </form>
+   
+    <form action="/verify-otp" method="POST">
+      <input type="email" name="email" placeholder="Enter email" required />
+      <input type="text" name="otp" placeholder="Enter OTP" required />
+      <button type="submit">Verify OTP</button>
+    </form>
+    
+
+    
+
+  
 </body>
 </html>
