@@ -31,10 +31,17 @@ const signupUser = async (req, res) => {
   try {
     await user.save();
     console.log('User signed up successfully!');
-    res.redirect('/login');
+    res.render('signup', {
+      message: 'Signup Successful! Redirecting to login...',
+      status: 'success',
+      redirectTo: '/login',  // Redirect to login after signup
+    });
   } catch (err) {
     console.error('Error saving user:', err);
-    res.status(500).send('Error signing up: ' + err);
+    res.render('signup', {
+      message: 'Error signing up. Please try again.',
+      status: 'error',
+    });
   }
 };
 
@@ -42,40 +49,47 @@ const signupUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  // Basic input validation (you can add more validations)
-  if (!email || !password) {
-    return res.status(400).send('Both email and password are required');
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.render('login', {
+        message: 'User not found!',
+        status: 'error',
+      });
+    }
+
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match) {
+      return res.render('login', {
+        message: 'Incorrect password!',
+        status: 'error',
+      });
+    }
+
+    req.session.userId = user._id;
+    // Render login with a success message and redirect client-side
+    res.render('login', {
+      message: 'Login Successful! Redirecting...',
+      status: 'success',
+      redirectTo: '/home',
+    });
+  } catch (err) {
+    res.render('login', {
+      message: `An error occurred during login: ${err.message}`,
+      status: 'error',
+    });
   }
-
-  // Check if the user exists
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    return res.status(400).send('User not found');
-  }
-
-  // Compare passwords
-  const match = await bcrypt.compare(password, user.password);
-
-  if (!match) {
-    return res.status(400).send('Incorrect password');
-  }
-
-  // Set session for the user
-  req.session.userId = user._id;
-  res.redirect('/home');
 };
-
 // Home Page
 const homePage = (req, res) => {
   if (!req.session.userId) {
     return res.redirect('/login');
   }
-
-  // Fetch user info (optional)
   User.findById(req.session.userId)
     .then((user) => {
-      res.render('home', { user });  // Passing user to the home page template
+      res.render('home', { user });  
     })
     .catch((err) => {
       console.error(err);
@@ -89,7 +103,12 @@ const logoutUser = (req, res) => {
     if (err) {
       return res.status(500).send('Error logging out');
     }
-    res.redirect('/');  // Redirect to landing page after logout
+    res.clearCookie('sid');
+    res.render('logout', {
+      message: 'Logout Successful! Redirecting to home...',
+      status: 'success',
+      redirectTo: '/home',  // Redirect to home after logout
+    });
   });
 };
 

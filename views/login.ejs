@@ -15,14 +15,12 @@
   <% if (errorMessage) { %>
     <p style="color: red;"><%= errorMessage %></p>
   <% } %>
-
   <form action="/login" method="POST" onsubmit="return validateLoginForm()">
     <label>Email:</label>
-    <input type="email" name="email" required><br><br>
+    <input type="email" name="email" id="email" required><br><br>
     
     <label>Password:</label>
-    <input type="password" name="password" required><br><br>
-    
+    <input type="password" name="password" required onfocus="checkEmailBeforePassword()"><br><br>    
     <button type="submit">Login</button>
   </form>
   <div class="signup-link">
@@ -33,8 +31,15 @@
   <button class="toggle-btn" onclick="toggleTheme()">
     <i id="mode-icon" class="fas fa-sun"></i>
   </button>
-
   <script>
+    function checkEmailBeforePassword() {
+      const email = document.querySelector('input[name="email"]').value;
+      
+      if (email === '') {
+        alert('Please fill in the email field first before entering the password.');
+        document.querySelector('input[name="email"]').focus();  // Focus back to email field
+      }
+    }
     function validateLoginForm() {
       const email = document.querySelector('input[name="email"]').value;
       const password = document.querySelector('input[name="password"]').value;
