@@ -58,23 +58,28 @@ exports.verifyOTP = async (req, res) => {
 const signupUser = async (req, res) => {
   const { name, email, phone, password, age, gender } = req.body;
 
-  // Hash password
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const user = new User({
-    name,
-    email,
-    phone,
-    password: hashedPassword,
-    age,
-    gender,
-  });
-
   try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      name,
+      email,
+      phone,
+      password: hashedPassword,
+      age,
+      gender,
+    });
+
     await user.save();
-    res.redirect('/login');
+    res.render('signup', {
+      message: 'Signup Successful! Please login.',
+      status: 'success',
+    });
   } catch (err) {
-    res.status(500).send('Error signing up: ' + err);
+    res.render('signup', {
+      message: `Signup Failed: ${err.message}`,
+      status: 'error',
+    });
   }
 };
 
@@ -82,20 +87,38 @@ const signupUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+  try {
+    const user = await User.findOne({ email });
 
-  if (!user) {
-    return res.status(400).send('User not found');
+    if (!user) {
+      return res.render('login', {
+        message: 'User not found!',
+        status: 'error',
+      });
+    }
+
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match) {
+      return res.render('login', {
+        message: 'Incorrect password!',
+        status: 'error',
+      });
+    }
+
+    req.session.userId = user._id;
+    // Render login with a success message and redirect client-side
+    res.render('login', {
+      message: 'Login Successful! Redirecting...',
+      status: 'success',
+      redirectTo: '/home',
+    });
+  } catch (err) {
+    res.render('login', {
+      message: `An error occurred during login: ${err.message}`,
+      status: 'error',
+    });
   }
-
-  const match = await bcrypt.compare(password, user.password);
-
-  if (!match) {
-    return res.status(400).send('Incorrect password');
-  }
-
-  req.session.userId = user._id;
-  res.redirect('/home');
 };
 
 // Home
