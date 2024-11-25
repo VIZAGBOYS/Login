@@ -1,85 +1,349 @@
-/* Global styles */
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-  }
-  
-  /* Heading styles */
-  h1, h2 {
-    text-align: center;
-  }
-  
-  /* Form container */
-  form {
-    margin: 20px;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  /* Input, select, and button styles */
-  input, select, button {
-    width: 100%;
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
+  position: relative;
+  background-color: #0a8974; /* Light blue background */
+  color: #fff; 
+}
+
+/* Light Mode */
+body.light-mode {
+  background-color: #0a8974;
+  color: #fff;
+}
+
+/* Dark Mode */
+body.dark-mode {
+  background-color: #181818; /* Black background for dark mode */
+  color: #e0e0e0; /* Light text color for readability */
+}
+
+/* Headings */
+h1, h2 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+h1 {
+  position: absolute; /* Allows precise positioning */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjust positioning to perfectly center */
+  margin: 0; /* Remove any default margins */
+  font-size: 2rem; /* Adjust size as needed */
+  text-align: center; /* Align text to the center */
+}
+
+
+h2 {
+  font-size: 2rem;
+}
+
+/* Forms */
+form {
+  background: linear-gradient(145deg, #8f8fef, #6f6ff0);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  margin: 20px;
+}
+
+form input,
+form select,
+form button {
+  width: 100%;
+  font-size: 0.9rem;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+form button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+form button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+form button:active {
+  transform: translateY(0);
+}
+form.logout-form {
+  background: none;
+  padding: 0;
+  box-shadow: none;
+}
+
+
+/* Links as Buttons */
+a.button-link, .logout-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 10px;
+}
+
+a.button-link:hover, .logout-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Landing Page */
+.landing-page {
+  text-align: center;
+  position: relative;
+  padding: 20px;
+}
+
+.landing-page h1 {
+  margin-bottom: 30px;
+}
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Space between buttons */
+}
+
+.landing-page a.button-link {
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+}
+.landing-page a.signup-btn {
+  background-color: #28a745; /* Green for signup */
+}
+
+.landing-page a.signup-btn:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+/* Login Page */
+/* Login Page Styling */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(145deg, #8f8fef, #6f6ff0);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+}
+
+/* Login Page Heading */
+.login-container h2 {
+  margin-bottom: 20px;
+  font-size: 2rem;
+  text-align: center;
+}
+
+
+.login-page form a {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  color: #fff;
+  text-decoration: underline;
+}
+/* Error Message */
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  text-align: center;
+}
+/* Signup Link */
+.signup-link {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.signup-link a {
+  color: #fff;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.signup-link a:hover {
+  color: #ffc107; /* Highlight color on hover */
+}
+
+
+/* Signup Page */
+.signup-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(145deg, #8f8fef, #6f6ff0);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+}
+
+.signup-page form {
+  max-width: 450px;
+  width: 95%;
+  padding: 30px;
+}
+
+.signup-container h2 {
+  margin-bottom: 20px;
+  font-size: 2rem;
+  text-align: center;
+}
+/* Login Link */
+.login-link {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.login-link a {
+  color: #fff;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.login-link a:hover {
+  color: #ffc107; /* Highlight color on hover */
+}
+
+/* Home Page */
+/* Logout Button */
+.logout-btn {
+  position: absolute;
+  top: 20px; /* Position it near the top */
+  right: 20px; /* Align it to the right */
+  background-color: #007bff; /* Blue background */
+  color: white; /* White text */
+  padding: 8px 12px; /* Smaller padding for a compact button */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Add rounded corners */
+  cursor: pointer; /* Pointer cursor for interactivity */
+  font-size: 0.9rem; /* Smaller font size for compact appearance */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth hover effects */
+  width: auto; /* Ensure the button does not stretch */
+  text-align: center; /* Center-align text */
+  line-height: 1.5; /* Proper spacing for smaller button */
+}
+
+/* Hover Effect for Logout Button */
+.logout-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  transform: translateY(-2px); /* Slight hover effect */
+}
+
+/* Active State for Logout Button */
+.logout-btn:active {
+  transform: translateY(0); /* Reset position when clicked */
+}
+
+
+/* Toggle Button */
+.toggle-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: inherit;
+  transition: color 0.3s;
+}
+
+.toggle-btn:focus {
+  outline: none;
+}
+
+.toggle-btn:hover {
+  color: #007bff;
+}
+
+/* Dark Mode Customizations */
+body.dark-mode form {
+  background: linear-gradient(145deg, #3a3a3a, #555);
+}
+
+body.dark-mode input,
+body.dark-mode select {
+  background-color: #444;
+  color: #fff;
+  border-color: #666;
+}
+
+body.dark-mode button {
+  background-color: #3700b3;
+}
+
+body.dark-mode button:hover {
+  background-color: #03dac6;
+}
+
+body.dark-mode a.button-link,
+body.dark-mode .logout-btn {
+  background-color: #3700b3;
+}
+
+body.dark-mode a.button-link:hover,
+body.dark-mode .logout-btn:hover {
+  background-color: #03dac6;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  body {
     padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: 1px solid #ddd;
   }
-  
-  /* Button styling */
-  button {
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
+
+  .landing-page h1 {
+    font-size: 2rem;
   }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
-  /* Modal styles */
-  .modal-dialog {
-    max-width: 400px;
-    margin: 30px auto;
-  }
-  
-  .modal-content {
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  }
-  
-  .modal-header {
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .modal-title {
+
+  .toggle-btn {
     font-size: 18px;
   }
-  
-  .modal-body {
-    font-size: 16px;
-    padding: 10px 0;
-    color: #333;
+
+  .landing-page a.button-link {
+    width: auto;
   }
-  
-  .modal-footer {
-    text-align: center;
+
+  form {
+    width: 100%;
   }
-  
-  .modal-footer .btn-secondary {
-    background-color: #ccc;
-    border: 1px solid #bbb;
-    padding: 8px 16px;
-  }
-  
-  .modal-footer .btn-secondary:hover {
-    background-color: #bbb;
-  }
-  
+}

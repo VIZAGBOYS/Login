@@ -1,47 +1,80 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const session = require('express-session');
-const MongoStore = require('connect-mongo');
-const dotenv = require('dotenv');
-const authRoutes = require('./routes/authRoutes');
 const path = require('path');
 
-// Load environment variables
-dotenv.config();
+// Dynamically import `open` package for ES module compatibility
+(async () => {
+  const open = (await import('open')).default; // Dynamic import with the default export
 
-// Initialize Express
-const app = express();
+  const app = express();
+  const users = []; // Sample in-memory users database
+  let loggedInUser = null;
 
-// Middleware
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-// Static Files
-app.use(express.static(path.join(__dirname, 'public')));
-
-// View Engine
-app.set('view engine', 'ejs');
-
-// Session Management
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(session({
+    secret: 'secret-key',
     resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
-  })
-);
+    saveUninitialized: true
+  }));
 
-// Routes
-app.use('/', authRoutes);
+  // Home route
+  app.get('/', (req, res) => {
+    res.render('index');
+  });
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.log('MongoDB connection error: ', err));
+  // Signup route
+  app.get('/signup', (req, res) => {
+    res.render('signup');
+  });
 
-// Start Server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+  app.post('/signup', (req, res) => {
+    const { name, email, phone, password, age, gender } = req.body;
+    users.push({ name, email, phone, password, age, gender });
+    res.redirect('/login');
+  });
+
+  // Login route
+  app.get('/login', (req, res) => {
+    res.render('login', { errorMessage: '' });
+  });
+
+  app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+    const user = users.find(u => u.email === email && u.password === password);
+
+    if (user) {
+      req.session.user = user;
+      loggedInUser = user;
+      res.redirect('/home');
+    } else {
+      res.render('login', { errorMessage: 'Invalid credentials. Please try again.' });
+    }
+  });
+
+  // Home route
+  app.get('/home', (req, res) => {
+    if (!loggedInUser) {
+      return res.redirect('/login');
+    }
+    res.render('home');
+  });
+
+  // Logout route
+  app.get('/logout', (req, res) => {
+    req.session.destroy();
+    loggedInUser = null;
+    res.redirect('/login');
+  });
+
+  // Set the view engine
+  app.set('views', path.join(__dirname, 'views')); // Ensure the path to views is set
+  app.set('view engine', 'ejs');
+
+  // Start the server and open the browser automatically
+  app.listen(3000, () => {
+    console.log('Server started on http://localhost:3000');
+    open('http://localhost:3000');
+  });
+})();
