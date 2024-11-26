@@ -36,6 +36,11 @@ router.get('/logout', (req, res) => {
   });
 });
 
+//forgot password
+router.get('/forgot-password', (req, res) => {
+  res.render('forgot-password');
+});
+
 //otp 
 
 
