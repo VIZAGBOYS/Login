@@ -4,84 +4,75 @@ const sendEmail = require('../utils/sendEmail');
 const generateOTP = require('../utils/generateOTP');
 
 
-//otp sending 
-exports.sendOTP = async (req, res) => {
-  const { email } = req.body;
+
+
+// verify otp 
+
+const verifyOTP = async (req, res) => {
+  const { email, otp } = req.body;
 
   try {
+    const user = await User.findOne({ email });
+
+    if (!user || user.otp !== otp || user.otpExpiry < Date.now()) {
+      return res.status(400).send('Invalid or expired OTP.');
+    }
+
+    // Mark as verified and save
+    user.isVerified = true;
+    user.otp = undefined;
+    user.otpExpiry = undefined;
+    await user.save();
+
+    res.redirect('/login'); // Redirect to login page
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error verifying OTP.');
+  }
+};
+
+// Signup
+const signupUser = async (req, res) => {
+  const { name, email, password, phone, age, gender } = req.body; // Ensure all fields are received
+
+  try {
+    // Generate OTP
     const otp = generateOTP();
     const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
+    // Temporarily store user data
     let user = await User.findOne({ email });
     if (!user) {
-      user = new User({ email, otp, otpExpiry });
+      user = new User({ 
+        name, 
+        email, 
+        password, 
+        phone,      // Make sure this is passed in
+        age,        // Make sure this is passed in
+        gender,     // Make sure this is passed in
+        otp, 
+        otpExpiry, 
+        isVerified: false 
+      });
     } else {
       user.otp = otp;
       user.otpExpiry = otpExpiry;
     }
 
     await user.save();
+
+    // Send OTP email
     await sendEmail(email, 'Verify Your Email', `Your OTP is: ${otp}`);
 
-    res.status(200).json({ message: 'OTP sent to email!' });
+    // Redirect to OTP verification page
+    res.render('verify-otp', { email });
+
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Error sending OTP.' });
+    res.status(500).send('Error during signup.');
   }
 };
 
-// verify otp 
-
-exports.verifyOTP = async (req, res) => {
-  const { email, otp } = req.body;
-
-  try {
-    const user = await User.findOne({ email });
-    if (!user || user.otp !== otp || user.otpExpiry < Date.now()) {
-      return res.status(400).json({ message: 'Invalid or expired OTP.' });
-    }
-
-    user.isVerified = true;
-    user.otp = undefined;
-    user.otpExpiry = undefined;
-    await user.save();
-
-    res.status(200).json({ message: 'Email verified successfully!' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error verifying OTP.' });
-  }
-};
-
-
-// Signup
-const signupUser = async (req, res) => {
-  const { name, email, phone, password, age, gender } = req.body;
-
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = new User({
-      name,
-      email,
-      phone,
-      password: hashedPassword,
-      age,
-      gender,
-    });
-
-    await user.save();
-    res.render('signup', {
-      message: 'Signup Successful! Please login.',
-      status: 'success',
-    });
-  } catch (err) {
-    res.render('signup', {
-      message: `Signup Failed: ${err.message}`,
-      status: 'error',
-    });
-  }
-};
 
 // Login
 const loginUser = async (req, res) => {
@@ -129,4 +120,4 @@ const homePage = (req, res) => {
   res.render('home');
 };
 
-module.exports = { signupUser, loginUser, homePage, sendOTP, verifyOTP };
+module.exports = { signupUser, loginUser, homePage,  verifyOTP };

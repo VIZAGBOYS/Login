@@ -25,4 +25,9 @@ router.post('/login', loginUser);
 // Home Page
 router.get('/home', homePage);
 
+//otp 
+
+
+router.post('/verify-otp', verifyOTP);
+
 module.exports = router;

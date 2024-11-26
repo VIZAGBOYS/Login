@@ -35,6 +35,7 @@ app.use(
 // Routes
 app.use('/', authRoutes);
 
+
 app.get('/', (req, res) => {
   res.render('signup.ejs');
 });
