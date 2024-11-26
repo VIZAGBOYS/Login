@@ -25,6 +25,17 @@ router.post('/login', loginUser);
 // Home Page
 router.get('/home', homePage);
 
+// logout
+router.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.redirect('/home');
+    }
+    res.clearCookie('sid');
+    res.redirect('/login');
+  });
+});
+
 //otp 
 
 
