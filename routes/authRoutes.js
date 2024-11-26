@@ -1,5 +1,7 @@
 const express = require('express');
 const { signupUser, loginUser, homePage } = require('../controllers/authController');
+const { sendOTP, verifyOTP } = require('../controllers/authController');
+
 
 const router = express.Router();
 
@@ -23,23 +25,9 @@ router.post('/login', loginUser);
 // Home Page
 router.get('/home', homePage);
 
-// Logout
-router.get('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.render('logout', {
-        message: 'An error occurred while logging out.',
-        status: 'error',
-      });
-    }
-    res.clearCookie('sid');
-    res.render('logout', {
-      message: 'Logout Successful!',
-      status: 'success',
-      redirectTo: '/login', // Redirect after successful logout
-    });
-  });
-});
+//otp 
 
+
+router.post('/verify-otp', verifyOTP);
 
 module.exports = router;

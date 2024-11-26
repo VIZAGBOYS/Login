@@ -7,7 +7,11 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   age: { type: Number, required: true },
   gender: { type: String, required: true },
+  isVerified: { type: Boolean, default: false },
+  otp: String,
+  otpExpiry: Date,
 });
+
 
 const User = mongoose.model('User', userSchema);
 
