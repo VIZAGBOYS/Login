@@ -120,4 +120,5 @@ const homePage = (req, res) => {
   res.render('home');
 };
 
+
 module.exports = { signupUser, loginUser, homePage,  verifyOTP };
