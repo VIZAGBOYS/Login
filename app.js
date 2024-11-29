@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt');
 const User = require('./models/usermodel'); // Import the User model
 
 // Load environment variables from gitignore/.env
-dotenv.config({ });
+dotenv.config({ path: path.join(__dirname, 'gitignore/.env') });
 
 // Initialize Express
 const app = express();
@@ -41,6 +41,7 @@ app.use(
 // Routes
 app.use(authRoutes);
 
+<<<<<<< HEAD
 // Forgot Password Route
 app.get('/forgot-password', (req, res) => {
   res.render('forgot-password'); // Render the forgot-password.ejs view
@@ -95,6 +96,8 @@ app.post('/forgot-password', async (req, res) => {
   }
 });
 
+=======
+>>>>>>> 3ef0abbde3b4d1df935072f9640a7881eb7ae9fa
 // Handle OTP verification and password reset
 app.post('/verify-otp', async (req, res) => {
   try {
