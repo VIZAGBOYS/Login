@@ -44,6 +44,7 @@ app.get('/forgot-password', (req, res) => {
 });
 
 // Handle sending OTP
+// Update the forgotten password and verify OTP routes to use correct logic
 app.post('/forgot-password', async (req, res) => {
   try {
     const { email } = req.body;
@@ -91,6 +92,33 @@ app.post('/forgot-password', async (req, res) => {
     res.status(500).send('An error occurred');
   }
 });
+
+app.post('/verify-otp', async (req, res) => {
+  try {
+    const { otp, 'new-password': newPassword } = req.body;
+    const email = req.session.email;
+
+    const user = await User.findOne({ email });
+    if (!user || user.otp !== otp || user.otpExpiry < Date.now()) {
+      return res.status(400).send('Invalid or expired OTP');
+    }
+
+    // Hash the new password before saving
+    user.password = await bcrypt.hash(newPassword, 10);
+
+    // Clear OTP fields
+    user.otp = undefined;
+    user.otpExpiry = undefined;
+
+    await user.save();
+
+    res.redirect('/login'); // Redirect to login page after successful reset
+  } catch (error) {
+    console.error('Error in /verify-otp:', error);
+    res.status(500).send('An error occurred');
+  }
+});
+
 
 // Handle OTP verification and password reset
 app.post('/verify-otp', async (req, res) => {
