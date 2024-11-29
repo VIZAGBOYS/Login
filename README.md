@@ -1,4 +1,4 @@
-Here's a **trendy and concise version** of your `README.md` for the Login Project:
+
 
 ```markdown
 # 🚀 Login Project
@@ -30,7 +30,7 @@ A sleek login application built with **Node.js**, **Express.js**, **MongoDB**, a
 
 3. **Seed the Database** (Optional)  
    ```bash
-   npm run seed
+   node seed.js
    ```
 
 4. **Run the App**  
@@ -43,7 +43,7 @@ A sleek login application built with **Node.js**, **Express.js**, **MongoDB**, a
 
 ## 📂 Folder Structure
 
-```
+```plaintext
 Login/
 ├── app.js         # Main server file
 ├── routes/        # Routes for the application
@@ -66,11 +66,9 @@ Login/
 
 ## 📜 License
 Licensed under the [MIT License](LICENSE).
-```
+``` 
 
-### Key Changes:
-- Streamlined sections for better readability.
-- Removed redundant headers and unnecessary content.
-- Added trendy icons to give it a modern feel. 
-
-Let me know if you need any more tweaks!
+This version is optimized for GitHub:
+- Proper code block formatting using triple backticks (```).
+- Consistent section headings (`##`), bullet points, and emojis for readability.
+- Folder structure is shown using a code block with `plaintext` for clear alignment.
