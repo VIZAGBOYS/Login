@@ -3,12 +3,7 @@ const bcrypt = require('bcryptjs');
 const sendEmail = require('../utils/sendEmail');
 const generateOTP = require('../utils/generateOTP');
 
-
-
-
-
-// verify otp 
-
+// OTP Verification Controller
 const verifyOTP = async (req, res) => {
   const { email, otp } = req.body;
 
@@ -24,70 +19,57 @@ const verifyOTP = async (req, res) => {
     }
 
     if (user.otpExpiry < Date.now()) {
-      return res.status(401).send('Expired OTP.');
+      return res.status(401).send('OTP has expired.');
     }
 
-    console.log('Received OTP:', otp);
-    console.log('Stored OTP:', user.otp);
-    console.log('OTP Expiry:', user.otpExpiry);
-
-    // Mark as verified and save
     user.isVerified = true;
     user.otp = undefined;
     user.otpExpiry = undefined;
+
     await user.save();
 
-    res.redirect('/login'); // Redirect to login page
+    res.send('User verified successfully.');
   } catch (err) {
     console.error(err);
     res.status(500).send('Error verifying OTP.');
   }
 };
 
-// Signup
+// Sign-Up Controller
 const signupUser = async (req, res) => {
-  const { name, email, password, phone, age, gender } = req.body; // Ensure all fields are received
+  const { name, email, phone, password, age, gender } = req.body;
 
   try {
-    // Generate OTP
-    const otp = generateOTP();
-    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-
-    // Temporarily store user data
-    let user = await User.findOne({ email });
-    if (!user) {
-      user = new User({ 
-        name, 
-        email, 
-        password, 
-        phone,      // Make sure this is passed in
-        age,        // Make sure this is passed in
-        gender,     // Make sure this is passed in
-        otp, 
-        otpExpiry, 
-        isVerified: false 
-      });
-    } else {
-      user.otp = otp;
-      user.otpExpiry = otpExpiry;
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).send('User already exists.');
     }
 
-    await user.save();
+    const otp = generateOTP();
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
 
-    // Send OTP email
-    await sendEmail(email, 'Verify Your Email', `Your OTP is: ${otp}`);
+    const newUser = new User({
+      name,
+      email,
+      phone,
+      password,
+      age,
+      gender,
+      otp,
+      otpExpiry,
+    });
 
-    // Redirect to OTP verification page
-    res.render('verify-otp', { email });
+    await newUser.save();
+    await sendEmail(newUser.email, 'Verify Your OTP', `Your OTP is: ${otp}`);
 
+    res.status(200).send('OTP sent to your email for verification.');
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error during signup.');
+    res.status(500).send('Error during sign-up.');
   }
 };
 
-
-// Login
+// Login Controller
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -102,7 +84,6 @@ const loginUser = async (req, res) => {
     }
 
     const match = await bcrypt.compare(password, user.password);
-
     if (!match) {
       return res.render('login', {
         message: 'Incorrect password!',
@@ -111,7 +92,6 @@ const loginUser = async (req, res) => {
     }
 
     req.session.userId = user._id;
-    // Render login with a success message and redirect client-side
     res.render('login', {
       message: 'Login Successful! Redirecting...',
       status: 'success',
@@ -125,44 +105,29 @@ const loginUser = async (req, res) => {
   }
 };
 
-const homePage = (req, res) => {
-  if (!req.session.userId) {
-    return res.redirect('/login'); 
-  }
-
-  
-  res.render('home'); 
-};
-
- // Forgot Password Controller
-
+// Forgot Password Controller
 const forgotPassword = async (req, res) => {
-  try {
-    const { email } = req.body;
+  const { email } = req.body;
 
-    // Validate email
+  try {
     if (!email) {
       return res.status(400).send('Email is required');
     }
 
-    // Check if the user exists
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).send('User not found');
     }
 
-    // Generate OTP and set expiry
     const otp = generateOTP();
-    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);  // OTP expires in 10 min
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
 
-    // Update user's OTP and expiry in the database
     user.otp = otp;
     user.otpExpiry = otpExpiry;
     await user.save();
 
-    // Send OTP via email
     const subject = 'Your OTP for Password Reset';
-    await sendEmail(email, subject, otp); // Using your `sendEmail.js` function
+    await sendEmail(email, subject, `Your OTP is: ${otp}`);
 
     res.status(200).send(`OTP sent to ${email}`);
   } catch (error) {
@@ -170,23 +135,29 @@ const forgotPassword = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+// Reset Password Controller
 const resetPassword = async (req, res) => {
-  const { newPassword, confirmPassword } = req.body;
+  const { newPassword, confirmPassword, otp } = req.body;
 
   if (newPassword !== confirmPassword) {
     return res.status(400).send('Passwords do not match');
   }
 
   try {
-    const user = await User.findOne({ otp: req.body.otp });
+    const user = await User.findOne({ otp });
 
     if (!user) {
       return res.status(404).send('User not found');
     }
 
-    user.password = newPassword; // Save the new password
-    user.otp = undefined; // Clear OTP
-    user.otpExpiry = undefined; // Clear OTP expiry
+    if (user.otpExpiry < Date.now()) {
+      return res.status(401).send('Expired OTP');
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.otp = undefined;
+    user.otpExpiry = undefined;
     await user.save();
 
     res.status(200).send('Password successfully reset');
@@ -196,5 +167,13 @@ const resetPassword = async (req, res) => {
   }
 };
 
+// Home Page Controller
+const homePage = (req, res) => {
+  if (!req.session.userId) {
+    return res.redirect('/login');
+  }
 
-module.exports = { signupUser, loginUser, homePage,  verifyOTP , forgotPassword,resetPassword};
+  res.render('home');
+};
+
+module.exports = { signupUser, loginUser, homePage, verifyOTP, forgotPassword, resetPassword };

@@ -9,8 +9,8 @@ const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const User = require('./models/usermodel'); // Import the User model
 
-// Load environment variables from gitignore/.env
-dotenv.config({  });
+// Load environment variables from .env
+dotenv.config();
 
 // Initialize Express
 const app = express();
@@ -24,9 +24,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // View Engine
 app.set('view engine', 'ejs');
-
-
-
 
 // Session Management
 app.use(
