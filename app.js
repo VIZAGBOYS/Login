@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt');
 const User = require('./models/usermodel'); // Import the User model
 
 // Load environment variables from gitignore/.env
-dotenv.config({ path: path.join(__dirname, 'gitignore/.env') });
+dotenv.config();
 
 // Initialize Express
 const app = express();
@@ -41,63 +41,6 @@ app.use(
 // Routes
 app.use(authRoutes);
 
-<<<<<<< HEAD
-// Forgot Password Route
-app.get('/forgot-password', (req, res) => {
-  res.render('forgot-password'); // Render the forgot-password.ejs view
-});
-
-// Handle sending OTP
-app.post('/forgot-password', async (req, res) => {
-  try {
-    const { email } = req.body;
-    const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 6-digit OTP
-    const otpExpiry = Date.now() + 3600000; // OTP expires in 1 hour
-
-    // Find the user and update OTP and OTP expiry
-    const user = await User.findOneAndUpdate(
-      { email },
-      { otp, otpExpiry },
-      { new: true }
-    );
-
-    if (!user) {
-      console.error('User not found:', email);
-      return res.status(404).send('User not found');
-    }
-
-    // Send OTP via email
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD
-      }
-    });
-
-    const mailOptions = {
-      from: process.env.EMAIL,
-      to: email,
-      subject: 'Your OTP for Password Reset',
-      text: `Your OTP is ${otp}`
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error('Error sending OTP:', error);
-        return res.status(500).send('Error sending OTP');
-      }
-      console.log('OTP sent:', info.response);
-      res.send('OTP sent to your email');
-    });
-  } catch (error) {
-    console.error('Error in /forgot-password:', error);
-    res.status(500).send('An error occurred');
-  }
-});
-
-=======
->>>>>>> 3ef0abbde3b4d1df935072f9640a7881eb7ae9fa
 // Handle OTP verification and password reset
 app.post('/verify-otp', async (req, res) => {
   try {
