@@ -1,3 +1,4 @@
+
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -42,6 +43,17 @@ app.use(authRoutes);
 app.get('/forgot-password', (req, res) => {
   res.render('forgot-password'); // Render the forgot-password.ejs view
 });
+
+app.get('/logout', (req, res) => {
+  req.logout((err) => {
+      if (err) {
+          return res.status(500).send("Error logging out");
+      }
+      // Redirect to login page after logout
+      res.redirect('/login');  // Change the URL to your login page
+  });
+});
+
 
 // Handle sending OTP
 app.post('/forgot-password', async (req, res) => {
@@ -121,5 +133,5 @@ mongoose.connect(process.env.MONGO_URI, {
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
+  console.log(`Server is running at http://localhost:${PORT}`); 
 });
