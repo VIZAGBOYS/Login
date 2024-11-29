@@ -44,7 +44,8 @@ router.post('/forgot-password', forgotPassword); // Handle forgot password logic
 
 // OTP Verification Page
 router.get('/verify-otp', (req, res) => {
-  res.render('verify-otp');  // Render the verify-otp.ejs page
+  const { email } = req.query;
+  res.render('verify-otp', { email });  // Render the verify-otp.ejs page with email
 });
 
 // OTP Verification POST Route
@@ -52,7 +53,8 @@ router.post('/verify-otp', verifyOTP);
 
 // Reset Password Page
 router.get('/reset-password', (req, res) => {
-  res.render('reset-password');  // Render the reset-password.ejs page
+  const { email } = req.query;
+  res.render('reset-password', { email });  // Render the reset-password.ejs page with email
 });
 
 // Reset Password POST Route
