@@ -6,6 +6,7 @@ const generateOTP = require('../utils/generateOTP');
 
 
 
+
 // verify otp 
 
 const verifyOTP = async (req, res) => {
@@ -17,6 +18,9 @@ const verifyOTP = async (req, res) => {
     if (!user || user.otp !== otp || user.otpExpiry < Date.now()) {
       return res.status(400).send('Invalid or expired OTP.');
     }
+    console.log('Received OTP:', otp);
+    console.log('Stored OTP:', user.otp);
+    console.log('OTP Expiry:', user.otpExpiry);
 
     // Mark as verified and save
     user.isVerified = true;
@@ -112,13 +116,76 @@ const loginUser = async (req, res) => {
   }
 };
 
-// Home
 const homePage = (req, res) => {
   if (!req.session.userId) {
-    return res.redirect('/login');
+    return res.redirect('/login'); 
   }
-  res.render('home');
+
+  
+  res.render('home'); 
+};
+
+ // Forgot Password Controller
+
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Validate email
+    if (!email) {
+      return res.status(400).send('Email is required');
+    }
+
+    // Check if the user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    // Generate OTP and set expiry
+    const otp = generateOTP();
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);  // OTP expires in 10 min
+
+    // Update user's OTP and expiry in the database
+    user.otp = otp;
+    user.otpExpiry = otpExpiry;
+    await user.save();
+
+    // Send OTP via email
+    const subject = 'Your OTP for Password Reset';
+    await sendEmail(email, subject, otp); // Using your `sendEmail.js` function
+
+    res.status(200).send(`OTP sent to ${email}`);
+  } catch (error) {
+    console.error('Error in forgotPassword:', error.message);
+    res.status(500).send('Server error');
+  }
+};
+const resetPassword = async (req, res) => {
+  const { newPassword, confirmPassword } = req.body;
+
+  if (newPassword !== confirmPassword) {
+    return res.status(400).send('Passwords do not match');
+  }
+
+  try {
+    const user = await User.findOne({ otp: req.body.otp });
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    user.password = newPassword; // Save the new password
+    user.otp = undefined; // Clear OTP
+    user.otpExpiry = undefined; // Clear OTP expiry
+    await user.save();
+
+    res.status(200).send('Password successfully reset');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
 };
 
 
-module.exports = { signupUser, loginUser, homePage,  verifyOTP };
+module.exports = { signupUser, loginUser, homePage,  verifyOTP , forgotPassword,resetPassword};
