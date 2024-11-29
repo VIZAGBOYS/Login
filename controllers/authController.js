@@ -15,18 +15,9 @@ const verifyOTP = async (req, res) => {
   try {
     const user = await User.findOne({ email });
 
-    if (!user) {
-      return res.status(404).send('User not found.');
+    if (!user || user.otp !== otp || user.otpExpiry < Date.now()) {
+      return res.status(400).send('Invalid or expired OTP.');
     }
-
-    if (user.otp !== otp) {
-      return res.status(400).send('Invalid OTP.');
-    }
-
-    if (user.otpExpiry < Date.now()) {
-      return res.status(401).send('Expired OTP.');
-    }
-
     console.log('Received OTP:', otp);
     console.log('Stored OTP:', user.otp);
     console.log('OTP Expiry:', user.otpExpiry);
@@ -75,7 +66,7 @@ const signupUser = async (req, res) => {
     await user.save();
 
     // Send OTP email
-    await sendEmail(email, 'Verify Your Email', `Your OTP is: ${otp}`);
+    await sendEmail(email, 'Verify Your Email',`Your OTP is: ${otp}`);
 
     // Redirect to OTP verification page
     res.render('verify-otp', { email });
@@ -162,7 +153,7 @@ const forgotPassword = async (req, res) => {
 
     // Send OTP via email
     const subject = 'Your OTP for Password Reset';
-    await sendEmail(email, subject, otp); // Using your `sendEmail.js` function
+    await sendEmail(email, subject, otp); // Using your sendEmail.js function
 
     res.status(200).send(`OTP sent to ${email}`);
   } catch (error) {
