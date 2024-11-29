@@ -1,0 +1,25 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# Debug
+npm-debug.log*
+
+# Mac system files (if you're on macOS)
+.DS_Store
+
+# Build directories
+/dist
+/build
+
+# IDEs and editor settings
+.vscode/
+.idea/
+
+# Operating System specific files
+Thumbs.db

@@ -1,6 +1,6 @@
 const express = require('express');
 const { signupUser, loginUser, homePage } = require('../controllers/authController');
-const { sendOTP, verifyOTP } = require('../controllers/authController');
+const { forgotPassword, verifyOTP ,resetPassword} = require('../controllers/authController');
 
 
 const router = express.Router();
@@ -35,15 +35,19 @@ router.get('/logout', (req, res) => {
     res.redirect('/login');
   });
 });
-
-//forgot password
+//entering details
 router.get('/forgot-password', (req, res) => {
-  res.render('forgot-password');
+  res.render('forgot-password');  // Render the forgot-password.ejs page
 });
+
+// Forgot Password POST Route - to handle the form submission and send OTP
+router.post('/forgot-password', forgotPassword); // Handle forgot password logic
 
 //otp 
 
 
 router.post('/verify-otp', verifyOTP);
+//reset password
+router.post('/reset-password', resetPassword);
 
 module.exports = router;
