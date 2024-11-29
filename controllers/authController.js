@@ -15,9 +15,18 @@ const verifyOTP = async (req, res) => {
   try {
     const user = await User.findOne({ email });
 
-    if (!user || user.otp !== otp || user.otpExpiry < Date.now()) {
-      return res.status(400).send('Invalid or expired OTP.');
+    if (!user) {
+      return res.status(404).send('User not found.');
     }
+
+    if (user.otp !== otp) {
+      return res.status(400).send('Invalid OTP.');
+    }
+
+    if (user.otpExpiry < Date.now()) {
+      return res.status(401).send('Expired OTP.');
+    }
+
     console.log('Received OTP:', otp);
     console.log('Stored OTP:', user.otp);
     console.log('OTP Expiry:', user.otpExpiry);
